@@ -5,13 +5,16 @@ const cors = require('cors');
 const vision = require('@google-cloud/vision');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; 
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 
 const client = new vision.ImageAnnotatorClient({
-    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS|'key.json',
+    credentials: {
+        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    },
 });
 
 const beachData = [
@@ -20,11 +23,11 @@ const beachData = [
 ];
 
 app.post('/', async (req, res) => {
-    const base64Image = req.body.base64Image;
+    console.log("Received base64Image:", req.body.base64Image.slice(0, 100)); 
 
     try {
         const [result] = await client.labelDetection({
-            image: { content: base64Image }
+            image: { content: req.body.base64Image }
         });
 
         const labels = result.labelAnnotations;
@@ -33,6 +36,8 @@ app.post('/', async (req, res) => {
                 lb.description.toLowerCase().includes(e)
             )
         );
+
+        console.log("Labels detected:", labels.map(label => label.description));
 
         res.json({ isBeachRelated, labels });
     } catch (err) {

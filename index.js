@@ -23,6 +23,15 @@ const beachData = [
     'swimsuit', 'palm tree', 'shore', 'surfing', 'coast', 'tropical', 'seaside', 'island', 'beach volleyball', 'swimming'
 ];
 
+
+app.get('/',(req,res)=>{
+    res.send("I am backend for Shores");
+})
+
+app.get('/test',(req,res)=>{
+    res.send("I am Tester from backend team Shores");
+})
+
 app.post('/', async (req, res) => {
     console.log("Received base64Image:", req.body.base64Image.slice(0, 100)); 
 

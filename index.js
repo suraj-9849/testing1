@@ -5,7 +5,7 @@ const cors = require('cors');
 const vision = require('@google-cloud/vision');
 
 const app = express();
-const port = process.env.PORT|3001;
+const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -19,7 +19,7 @@ const beachData = [
     'swimsuit', 'palm tree', 'shore', 'surfing', 'coast', 'tropical', 'seaside', 'island', 'beach volleyball', 'swimming'
 ];
 
-app.post('/analyze-image', async (req, res) => {
+app.post('/', async (req, res) => {
     const base64Image = req.body.base64Image;
 
     try {

@@ -32,29 +32,26 @@ app.get('/test',(req,res)=>{
 })
 
 app.post('/', async (req, res) => {
-    console.log("Received base64Image:", req.body.base64Image.slice(0, 100)); 
+  console.log("Received base64Image:", req.body.base64Image.slice(0, 100)); 
 
-    try {
-        const [result] = await client.labelDetection({
-            image: { content: req.body.base64Image }
-        });
-
-        const labels = result.labelAnnotations;
-        const isBeachRelated = labels.some(lb =>
-            beachData.some(e =>
-                lb.description.toLowerCase().includes(e)
-            )
-        );
-
-        console.log("Labels detected:", labels.map(label => label.description));
-
-        res.json({ isBeachRelated, labels });
-    } catch (err) {
-        console.error('ERROR:', err);
-        res.status(500).send('Error analyzing image');
-    }
+  try {
+      const [result] = await client.labelDetection({
+          image: { content: req.body.base64Image }
+      });
+      const labels = result.labelAnnotations;
+      const isBeachRelated = labels.some(lb =>
+          beachData.some(e =>
+              lb.description.toLowerCase().includes(e)
+          )
+      );
+      console.log("Labels detected:", labels.map(label => label.description));
+      res.json({ isBeachRelated, labels });
+  } catch (err) {
+      console.error('ERROR:', err);
+      res.status(500).send('Error analyzing image');
+  }
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });

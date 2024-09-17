@@ -6,9 +6,9 @@ const vision = require('@google-cloud/vision');
 
 const app = express();
 const port = process.env.PORT || 3000; 
-
-app.use(cors({
+const corsOptions = {
     origin: (origin, callback) => {
+      // Allow specific origin and wildcard for development
       if (!origin || origin === 'http://localhost:5173' || origin === '*') {
         callback(null, true);
       } else {
@@ -17,8 +17,11 @@ app.use(cors({
     },
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
-  }));
+  };
   
+  app.use(cors(corsOptions));
+  
+  // Handle preflight requests
   app.options('*', cors());
 
 app.use(bodyParser.json({ limit: '10mb' }));
